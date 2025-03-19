@@ -2,7 +2,6 @@ import shutil
 import os
 import requests
 import torch
-import soundfile as sf
 from gtts import gTTS
 
 from typing import Union
@@ -35,6 +34,7 @@ def read_root():
 @app.post("/detect-object/")
 async def detect_file(file: UploadFile = File(...)):
     contents = await file.read()
+    image = Image.open(BytesIO(contents))
     reponse_list = image_to_text(image)
     reponse_text = ""
     if (reponse_list):
@@ -44,4 +44,4 @@ async def detect_file(file: UploadFile = File(...)):
     tts.save("audio.mp3")
     
     # scipy.io.wavfile.write("bark_out.wav", rate=speech["sampling_rate"], data=speech["audio"])
-    return {"info": f"file '{reponse_text}'"}
+    return FileResponse("audio.mp3", media_type='audio/mp3', headers={"Content-Disposition": "attachment; filename=audio.mp3"})
