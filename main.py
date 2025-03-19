@@ -12,6 +12,7 @@ from PIL import Image
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 from transformers import pipeline
 
@@ -19,6 +20,14 @@ import scipy
 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permet toutes les origines
+    allow_credentials=True,
+    allow_methods=["*"],  # Permet toutes les méthodes (GET, POST, etc.)
+    allow_headers=["*"],
+)
 
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
